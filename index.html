@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פרומפטים ל-Gemini — מכללת קיי</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --color-magenta: #E0128B;
+  --color-orange: #F68920;
+  --color-bg: #F5F5F7;
+  --color-dark: #1A1A1A;
+  --color-white: #FFFFFF;
+  --color-magenta-10: rgba(224,18,139,0.10);
+  --fg-secondary: rgba(26,26,26,0.60);
+  --gradient-brand: linear-gradient(135deg, #E0128B 0%, #F68920 100%);
+  --gradient-brand-90: linear-gradient(90deg, #E0128B 0%, #F68920 100%);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover: 0 6px 24px rgba(224,18,139,0.15);
+  --shadow-elevated: 0 12px 40px rgba(224,18,139,0.20);
+  --font-body: 'Rubik', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--color-bg);
+  font-family: var(--font-body);
+  color: var(--color-dark);
+}
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 5vh 24px 8vh;
+}
+
+header.hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+header.hero .label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-magenta);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+header.hero h1 {
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.75rem 0;
+}
+header.hero p {
+  font-size: 1.05rem;
+  color: var(--fg-secondary);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.gradient-bar {
+  height: 5px;
+  width: 72px;
+  background: var(--gradient-brand-90);
+  border: none;
+  border-radius: var(--radius-pill);
+  margin: 1.25rem auto 0;
+}
+
+/* Table of contents */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+.toc a {
+  text-decoration: none;
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.toc a:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+/* Prompt cards */
+.prompt-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem 1.5rem 1.75rem;
+  margin-bottom: 1.75rem;
+  border-right: 4px solid var(--color-magenta);
+  scroll-margin-top: 20px;
+}
+.prompt-card .prompt-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.prompt-num {
+  flex: none;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+.prompt-card h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+}
+.prompt-card .prompt-desc {
+  font-size: 0.9rem;
+  color: var(--fg-secondary);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+.code-wrap {
+  position: relative;
+}
+.code-block {
+  background: var(--color-dark);
+  color: #F5F5F7;
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.2rem;
+  font-family: 'Poppins', 'Rubik', monospace;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  direction: rtl;
+  text-align: right;
+  margin: 0;
+  max-height: 340px;
+  overflow-y: auto;
+}
+.code-block .placeholder {
+  color: var(--color-orange);
+  font-weight: 600;
+}
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.85rem;
+  margin-inline-start: auto;
+  background: var(--gradient-brand);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 9px 22px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.copy-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+.copy-btn:active { transform: scale(0.97); }
+.copy-btn.copied { background: #1F8A5B; }
+.copy-btn svg { width: 15px; height: 15px; flex: none; }
+
+/* Floating QR */
+.qr-fab {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 200;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.2s;
+}
+.qr-fab:hover { transform: scale(1.04); }
+.qr-fab canvas { display: block; width: 84px; height: 84px; border-radius: 6px; }
+.qr-fab .qr-fab-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-magenta);
+  letter-spacing: 0.04em;
+}
+
+/* Expanded QR modal */
+.qr-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,26,26,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 24px;
+}
+.qr-modal-backdrop.open { display: flex; }
+.qr-modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-elevated);
+  max-width: 320px;
+}
+.qr-modal canvas { width: 240px; height: 240px; border-radius: 8px; }
+.qr-modal p {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--fg-secondary);
+  word-break: break-all;
+}
+.qr-modal .close-hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-magenta);
+  font-weight: 600;
+}
+
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  font-size: 0.85rem;
+  color: var(--fg-secondary);
+}
+
+@media (max-width: 500px) {
+  .qr-fab canvas { width: 64px; height: 64px; }
+  .qr-fab { bottom: 14px; left: 14px; padding: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="hero">
+    <span class="label">מאפיינים רעיון בעזרת ראיון עם Gemini</span>
+    <h1>7 פרומפטים לראיון האפיון</h1>
+    <p>העתיקו כל פרומפט לשיחה עם Gemini, השלימו את הפרטים המסומנים, ועקבו אחרי הסדר שמוצג בהרצאה.</p>
+    <hr class="gradient-bar">
+  </header>
+
+  <nav class="toc" aria-label="ניווט מהיר">
+    <a href="#p1">1. פתיחת ראיון</a>
+    <a href="#p2">2. שאלה אחת בכל פעם</a>
+    <a href="#p3">3. יותר קונקרטי</a>
+    <a href="#p4">4. בדיקת UX/UI</a>
+    <a href="#p5">5. סיכום האפיון</a>
+    <a href="#p6">6. יצירת Gem</a>
+    <a href="#p7">7. בדיקת ה-Gem</a>
+  </nav>
+
+  <main id="prompts">
+
+    <article class="prompt-card" id="p1">
+      <div class="prompt-head">
+        <span class="prompt-num">1</span>
+        <h2>פתיחת ראיון האפיון</h2>
+      </div>
+      <p class="prompt-desc">העתיקו, השלימו את הסוגריים המרובעים ושלחו ל-Gemini בתחילת העבודה הקבוצתית.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="1">אנחנו קבוצת סטודנטים להוראה המשתתפת בהאקתון בנושא שימוש בבינה מלאכותית בהוראה.
+
+אנחנו מתכננים רכיב אינטראקטיבי כחלק ממערך שיעור.
+
+נושא השיעור: <span class="placeholder">[כתבו כאן]</span>
+
+קהל היעד: <span class="placeholder">[גיל, כיתה, רמת ידע, שפה וצרכים חשובים]</span>
+
+מטרת הלמידה הראשונית: <span class="placeholder">[כתבו כאן]</span>
+
+הרעיון הראשוני לרכיב: <span class="placeholder">[תארו בשניים עד ארבעה משפטים]</span>
+
+פעל כמראיין אפיון פדגוגי.
+
+המטרה שלך היא לעזור לנו להפוך את הרעיון לאפיון ברור, פשוט ומעשי.
+
+שאל אותנו שאלה אחת בכל פעם וחכה לתשובה לפני שתמשיך.
+
+אל תמהר להציע פתרון מלא ואל תבנה את הרכיב במקומנו.
+
+במהלך הראיון עזור לנו לברר:
+
+- מי בדיוק ישתמש ברכיב
+- מהי מטרת הלמידה
+- באיזה שלב בשיעור משתמשים בו
+- מה התלמיד עושה בכל שלב
+- מה קורה כאשר התלמיד מצליח, טועה או מתקשה
+- מה תפקיד המורה
+- מה המורה צריך לראות או לדעת
+- אילו רכיבים הכרחיים ואילו רק נחמדים
+- אילו עקרונות של פשטות, בהירות ונגישות חשובים
+
+השתמש בשפה פשוטה ולא טכנית.
+
+כאשר תשובה שלנו כללית מדי, בקש דוגמה קונקרטית.
+
+כאשר אתה מזהה סתירה או פרט חסר, הצבע עליו בעדינות ושאל שאלה שתעזור לנו להחליט.
+
+אל תניח שההצעות שלך מתאימות לכיתה שלנו. אפשר לנו לדחות, לתקן או להתאים אותן.
+
+התחל בשאלה החשובה ביותר.</pre>
+      </div>
+      <button class="copy-btn" data-target="1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+    <article class="prompt-card" id="p2">
+      <div class="prompt-head">
+        <span class="prompt-num">2</span>
+        <h2>כאשר Gemini שואל יותר מדי שאלות בבת אחת</h2>
+      </div>
+      <p class="prompt-desc">שלחו את הפרומפט הזה אם Gemini מציג רשימה ארוכה של שאלות במקום לשאול אחת בכל פעם.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="2">עצור לרגע.
+
+שאל אותנו רק שאלה אחת בכל פעם וחכה לתשובה שלנו.
+
+לאחר כל תשובה, הסבר במשפט קצר מה התחדד, ואז שאל את השאלה הבאה.</pre>
+      </div>
+      <button class="copy-btn" data-target="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+    <article class="prompt-card" id="p3">
+      <div class="prompt-head">
+        <span class="prompt-num">3</span>
+        <h2>כאשר השיחה נשארת כללית מדי</h2>
+      </div>
+      <p class="prompt-desc">שלחו כדי לדחוף את השיחה מרעיון כללי לתרחיש שימוש קונקרטי.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="3">השאלות והתשובות עדיין כלליות מדי.
+
+עזור לנו לעבור מרעיון כללי לתרחיש שימוש אמיתי.
+
+שאל אותנו על תלמיד מסוים, רגע מסוים בשיעור ופעולה מסוימת שהתלמיד מבצע.
+
+המשך בשאלה אחת בלבד.</pre>
+      </div>
+      <button class="copy-btn" data-target="3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+    <article class="prompt-card" id="p4">
+      <div class="prompt-head">
+        <span class="prompt-num">4</span>
+        <h2>בדיקת עקרונות UX/UI</h2>
+      </div>
+      <p class="prompt-desc">שלחו אחרי שהאפיון הבסיסי ברור, כדי לבדוק פשטות, בהירות ונגישות.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="4">עכשיו בצע בדיקת UX/UI בסיסית לרכיב, מנקודת המבט של תלמידים ומורים שאינם משתמשים טכנולוגיים מתקדמים.
+
+אל תציע עיצוב מלא.
+
+שאל אותנו שאלה אחת בכל פעם כדי לבדוק:
+
+- האם ברור לתלמיד מה לעשות
+- האם יש יותר מדי מידע או פעולות במסך אחד
+- האם השפה מתאימה לקהל
+- האם הטקסט והכפתורים יהיו קריאים וברורים
+- האם אפשר לטעות, לתקן ולנסות שוב
+- האם המשוב מסייע ללמידה
+- האם כל שלב ברכיב נחוץ
+- האם הרכיב מתאים לעבודה אישית, בזוגות או בקבוצה
+- האם יש צורך בהתאמות שפה או נגישות
+
+בסיום, הצג חמש המלצות קצרות ומעשיות בלבד.</pre>
+      </div>
+      <button class="copy-btn" data-target="4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+    <article class="prompt-card" id="p5">
+      <div class="prompt-head">
+        <span class="prompt-num">5</span>
+        <h2>סיכום האפיון</h2>
+      </div>
+      <p class="prompt-desc">שלחו לקראת סוף הראיון כדי לקבל תוצר מובנה מההחלטות שהתקבלו.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="5">סכם עכשיו את האפיון שלנו על בסיס ההחלטות שהתקבלו בשיחה בלבד.
+
+אל תוסיף החלטות חדשות שלא אישרנו.
+
+הצג את הסיכום במבנה הבא:
+
+1. שם זמני לרכיב
+2. תיאור הרכיב במשפט אחד
+3. מטרת הלמידה
+4. קהל היעד והצרכים שלו
+5. השלב במערך השיעור
+6. תרחיש שימוש מתחילתו ועד סופו
+7. פעולות התלמיד
+8. תפקיד המורה
+9. המשוב שהתלמיד מקבל
+10. המידע שהמורה מקבל
+11. רכיבים הכרחיים
+12. רכיבים שאפשר לדחות לשלב מאוחר יותר
+13. שלושה עקרונות UX/UI מרכזיים
+14. סיכונים או קשיים אפשריים
+15. שאלה אחת שעדיין דורשת החלטה
+
+לאחר הסיכום, הוסף:
+
+"מה הבנתי בוודאות"
+
+ו-
+
+"אילו דברים אני מניח ועדיין צריך לאשר".</pre>
+      </div>
+      <button class="copy-btn" data-target="5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+    <article class="prompt-card" id="p6">
+      <div class="prompt-head">
+        <span class="prompt-num">6</span>
+        <h2>ניתוח התהליך וליצירת Gem לשימוש חוזר</h2>
+      </div>
+      <p class="prompt-desc">שלחו באותה שיחה שבה בוצע הראיון, כדי להפוך את התהליך לכלי אישי לשימוש חוזר.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="6">נתח עכשיו את תהליך האפיון שעברנו בשיחה הזאת ובצע לו Reverse Engineering.
+
+המטרה היא ליצור הוראות ל-Gem לשימוש חוזר, שישמש כמראיין אפיון פדגוגי עבור מורים וסטודנטים להוראה.
+
+ה-Gem החדש לא צריך להיות קשור רק לנושא, לכיתה או לרכיב הספציפיים שעליהם דיברנו.
+
+הוא צריך להתאים למגוון שיעורים, גילאים, תחומי דעת ורכיבים אינטראקטיביים.
+
+פעל בשלבים הבאים:
+
+## שלב 1 — ניתוח התהליך
+
+זהה והצג:
+
+1. מה הייתה מטרת הראיון
+2. אילו שלבים עברנו
+3. אילו שאלות קידמו את האפיון בצורה הטובה ביותר
+4. אילו שאלות היו כלליות, מיותרות או פחות מתאימות
+5. אילו תשובות הובילו להחלטות חשובות
+6. אילו פערים או הנחות נחשפו
+7. אילו עקרונות UX/UI היו שימושיים
+8. איזה מבנה סיכום היה היעיל ביותר
+
+## שלב 2 — הפרדה בין תוכן לתהליך
+
+צור שתי רשימות:
+
+א. פרטים ששייכים רק לרכיב הספציפי שלנו
+
+ב. עקרונות, שאלות ושלבים שמתאימים לכל ראיון אפיון פדגוגי
+
+אל תכניס להוראות ה-Gem הסופיות פרטים ששייכים רק לרכיב שלנו.
+
+## שלב 3 — יצירת הוראות ל-Gem
+
+כתוב הוראות מלאות ומוכנות להדבקה ב-Gem חדש.
+
+ההוראות צריכות לכלול:
+
+### זהות ותפקיד
+
+- אתה מראיין אפיון פדגוגי
+- אתה עובד עם מורים וסטודנטים להוראה
+- אתה מסייע באפיון פעילויות, משחקים, אפליקציות ורכיבים אינטראקטיביים לשיעור
+
+### מטרת העבודה
+
+- להפוך רעיון ראשוני לאפיון ברור, ממוקד למידה ומעשי
+- לסייע למורה לקבל החלטות
+- לא להחליט במקום המורה
+
+### אופן השיחה
+
+- שאל שאלה אחת בכל פעם
+- חכה לתשובה לפני השאלה הבאה
+- השתמש בשפה פשוטה ולא טכנית
+- כאשר תשובה כללית, בקש דוגמה קונקרטית
+- כאשר חסר פרט, שאל עליו
+- כאשר קיימת סתירה, הצבע עליה בעדינות
+- אל תמהר להציע פתרון מלא
+- אל תעמיס רשימות ארוכות
+- אפשר למשתמש לדחות או לשנות כל הצעה
+
+### סדר הראיון
+
+ה-Gem צריך לברר בהדרגה:
+
+1. נושא השיעור
+2. קהל היעד
+3. מטרת הלמידה
+4. הבעיה או הצורך שהרכיב פותר
+5. השלב במערך השיעור
+6. תרחיש השימוש
+7. פעולות התלמיד
+8. תפקיד המורה
+9. משוב לתלמיד
+10. מידע למורה
+11. מצבי הצלחה, טעות וקושי
+12. רכיבים הכרחיים לעומת תוספות
+13. פשטות, בהירות ונגישות
+14. מגבלות מעשיות בכיתה
+
+### עקרונות פדגוגיים
+
+- להתחיל ממטרת הלמידה ולא מהטכנולוגיה
+- לוודא שכל פעולה ברכיב תורמת ללמידה
+- להתאים את הרכיב לגיל, לשפה, לרמה ולהקשר התרבותי
+- להתחשב בלומדים בעלי צרכים ורמות שונות
+- להבחין בין פעילות מעניינת לבין פעילות שמקדמת למידה
+
+### עקרונות UX/UI
+
+- פעולה מרכזית אחת בכל שלב
+- הוראות קצרות וברורות
+- טקסט קריא וניגודיות טובה
+- משוב ברור ומועיל
+- אפשרות לתקן ולנסות שוב
+- עקביות בכפתורים, בסמלים ובשפה
+- צמצום עומס מידע
+- התאמה לעבודה בכיתה ובמכשירים זמינים
+
+### התוצר הסופי
+
+בסיום כל ראיון, ה-Gem צריך להציג:
+
+1. שם זמני לרכיב
+2. תיאור במשפט אחד
+3. מטרת הלמידה
+4. קהל היעד
+5. שלב במערך השיעור
+6. תרחיש שימוש
+7. פעולות התלמיד
+8. תפקיד המורה
+9. משוב לתלמיד
+10. מידע למורה
+11. רכיבים הכרחיים
+12. תוספות אפשריות
+13. עקרונות UX/UI
+14. סיכונים או מגבלות
+15. שאלות פתוחות
+
+הסיכום צריך להבחין בין:
+
+- החלטות שהמשתמש קיבל
+- הצעות של ה-Gem
+- דברים שעדיין לא הוחלטו
+
+## שלב 4 — פתיחים לשיחה
+
+הצע חמישה פתיחים קצרים שאפשר להגדיר ב-Gem, לדוגמה:
+
+- יש לי רעיון ראשוני לרכיב לשיעור
+- אני רוצה לדייק פעילות אינטראקטיבית
+- יש לי משחק לימודי ואני רוצה לבדוק אותו
+- אני רוצה להפוך רעיון כללי לאפיון
+- אני רוצה לבדוק אם רכיב מתאים לתלמידים שלי
+
+## שלב 5 — בדיקת איכות
+
+לאחר כתיבת ההוראות, בדוק אותן בעצמך לפי הקריטריונים הבאים:
+
+- האם ה-Gem נשאר בתפקיד מראיין
+- האם הוא שואל שאלה אחת בכל פעם
+- האם הוא אינו מחליף את שיקול הדעת של המורה
+- האם הוא מתחיל בלמידה ולא בטכנולוגיה
+- האם ההוראות מתאימות לקהל לא טכני
+- האם הוא בודק נגישות ובהירות
+- האם התוצר הסופי ברור ושימושי
+
+לבסוף, הצג את התוצאה בשלושה חלקים:
+
+1. ניתוח קצר של התהליך שעברנו
+2. הוראות מלאות ומוכנות להדבקה ב-Gem
+3. חמישה פתיחים לשיחה
+
+אל תכלול בתוך הוראות ה-Gem פרטים ספציפיים מהרעיון שלנו, אלא רק עקרונות ותהליך שאפשר להשתמש בהם שוב.</pre>
+      </div>
+      <button class="copy-btn" data-target="6">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+    <article class="prompt-card" id="p7">
+      <div class="prompt-head">
+        <span class="prompt-num">7</span>
+        <h2>בדיקת ה-Gem לאחר יצירתו</h2>
+      </div>
+      <p class="prompt-desc">שלחו בתוך ה-Gem החדש שיצרתם, כדי לוודא שהוא אכן מראיין נכון.</p>
+      <div class="code-wrap">
+        <pre class="code-block" data-prompt-id="7">יש לי רעיון ראשוני לרכיב אינטראקטיבי לשיעור.
+
+התחל לראיין אותי לפי תהליך האפיון שלך.
+
+שאל שאלה אחת בלבד וחכה לתשובה.</pre>
+      </div>
+      <button class="copy-btn" data-target="7">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-label">העתק פרומפט</span>
+      </button>
+    </article>
+
+  </main>
+
+  <footer>מכללת קיי · 20.7 · Boost Me</footer>
+
+</div>
+
+<!-- Floating QR button -->
+<div class="qr-fab" id="qrFab" role="button" tabindex="0" aria-label="הצג QR מוגדל">
+  <canvas id="qrCanvasSmall"></canvas>
+  <span class="qr-fab-label">סרקו אותי</span>
+</div>
+
+<!-- Expanded QR modal -->
+<div class="qr-modal-backdrop" id="qrModalBackdrop">
+  <div class="qr-modal">
+    <canvas id="qrCanvasLarge"></canvas>
+    <p id="qrUrlText"></p>
+    <p class="close-hint">לחצו בכל מקום כדי לסגור</p>
+  </div>
+</div>
+
+<script>
+/*
+ * qrcode.js - QR Code generator (public domain implementation)
+ * Adapted minimal build — supports QR Code Model 2, byte mode (UTF-8), error correction levels.
+ * Based on the well-known kazuhikoarase/qrcode-generator public domain library.
+ */
+var qrcode = function() {
+
+var QRMode = { MODE_NUMBER:1<<0, MODE_ALPHA_NUM:1<<1, MODE_8BIT_BYTE:1<<2, MODE_KANJI:1<<3 };
+var QRErrorCorrectLevel = { L:1, M:0, Q:3, H:2 };
+var QRMaskPattern = { PATTERN000:0, PATTERN001:1, PATTERN010:2, PATTERN011:3, PATTERN100:4, PATTERN101:5, PATTERN110:6, PATTERN111:7 };
+var QRUtil = {
+  PATTERN_POSITION_TABLE : [
+    [], [6,18], [6,22], [6,26], [6,30], [6,34], [6,22,38], [6,24,42], [6,26,46], [6,28,50],
+    [6,30,54], [6,32,58], [6,34,62], [6,26,46,66], [6,26,48,70], [6,26,50,74], [6,30,54,78],
+    [6,30,56,82], [6,30,58,86], [6,34,62,90], [6,28,50,72,94], [6,26,50,74,98], [6,30,54,78,102],
+    [6,28,54,80,106], [6,32,58,84,110], [6,30,58,86,114], [6,34,62,90,118], [6,26,50,74,98,122],
+    [6,30,54,78,102,126], [6,26,52,78,104,130], [6,30,56,82,108,134], [6,34,60,86,112,138],
+    [6,30,58,86,114,142], [6,34,62,90,118,146], [6,30,54,78,102,126,150], [6,24,50,76,102,128,154],
+    [6,28,54,80,106,132,158], [6,32,58,84,110,136,162], [6,26,54,82,110,138,166],
+    [6,30,58,86,114,142,170] ],
+  G15 : (1<<10)|(1<<8)|(1<<5)|(1<<4)|(1<<2)|(1<<1)|(1<<0),
+  G18 : (1<<12)|(1<<11)|(1<<10)|(1<<9)|(1<<8)|(1<<5)|(1<<2)|(1<<0),
+  G15_MASK : (1<<14)|(1<<12)|(1<<10)|(1<<4)|(1<<1),
+  getBCHTypeInfo : function(data) {
+    var d = data << 10;
+    while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+      d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15)));
+    }
+    return ((data << 10) | d) ^ QRUtil.G15_MASK;
+  },
+  getBCHTypeNumber : function(data) {
+    var d = data << 12;
+    while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+      d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18)));
+    }
+    return (data << 12) | d;
+  },
+  getBCHDigit : function(data) {
+    var digit = 0;
+    while (data != 0) { digit++; data >>>= 1; }
+    return digit;
+  },
+  getPatternPosition : function(typeNumber) {
+    return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+  },
+  getMask : function(maskPattern, i, j) {
+    switch (maskPattern) {
+      case QRMaskPattern.PATTERN000 : return (i + j) % 2 == 0;
+      case QRMaskPattern.PATTERN001 : return i % 2 == 0;
+      case QRMaskPattern.PATTERN010 : return j % 3 == 0;
+      case QRMaskPattern.PATTERN011 : return (i + j) % 3 == 0;
+      case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0;
+      case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 == 0;
+      case QRMaskPattern.PATTERN110 : return ((i * j) % 2 + (i * j) % 3) % 2 == 0;
+      case QRMaskPattern.PATTERN111 : return ((i * j) % 3 + (i + j) % 2) % 2 == 0;
+      default : throw new Error("bad maskPattern:" + maskPattern);
+    }
+  },
+  getErrorCorrectPolynomial : function(errorCorrectLength) {
+    var a = new QRPolynomial([1], 0);
+    for (var i = 0; i < errorCorrectLength; i++) {
+      a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
+    }
+    return a;
+  },
+  getLengthInBits : function(mode, type) {
+    if (1 <= type && type < 10) {
+      switch(mode) {
+        case QRMode.MODE_NUMBER : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI : return 8;
+        default : throw new Error("mode:" + mode);
+      }
+    } else if (type < 27) {
+      switch(mode) {
+        case QRMode.MODE_NUMBER : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI : return 10;
+        default : throw new Error("mode:" + mode);
+      }
+    } else if (type < 41) {
+      switch(mode) {
+        case QRMode.MODE_NUMBER : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI : return 12;
+        default : throw new Error("mode:" + mode);
+      }
+    } else {
+      throw new Error("type:" + type);
+    }
+  },
+  getLostPoint : function(qrCode) {
+    var moduleCount = qrCode.getModuleCount();
+    var lostPoint = 0;
+    for (var row = 0; row < moduleCount; row++) {
+      for (var col = 0; col < moduleCount; col++) {
+        var sameCount = 0;
+        var dark = qrCode.isDark(row, col);
+        for (var r = -1; r <= 1; r++) {
+          if (row + r < 0 || moduleCount <= row + r) continue;
+          for (var c = -1; c <= 1; c++) {
+            if (col + c < 0 || moduleCount <= col + c) continue;
+            if (r == 0 && c == 0) continue;
+            if (dark == qrCode.isDark(row + r, col + c)) sameCount++;
+          }
+        }
+        if (sameCount > 5) lostPoint += (3 + sameCount - 5);
+      }
+    }
+    for (var row = 0; row < moduleCount - 1; row++) {
+      for (var col = 0; col < moduleCount - 1; col++) {
+        var count = 0;
+        if (qrCode.isDark(row, col)) count++;
+        if (qrCode.isDark(row + 1, col)) count++;
+        if (qrCode.isDark(row, col + 1)) count++;
+        if (qrCode.isDark(row + 1, col + 1)) count++;
+        if (count == 0 || count == 4) lostPoint += 3;
+      }
+    }
+    for (var row = 0; row < moduleCount; row++) {
+      for (var col = 0; col < moduleCount - 6; col++) {
+        if (qrCode.isDark(row, col) && !qrCode.isDark(row, col + 1) && qrCode.isDark(row, col + 2) &&
+            qrCode.isDark(row, col + 3) && qrCode.isDark(row, col + 4) && !qrCode.isDark(row, col + 5) && qrCode.isDark(row, col + 6)) {
+          lostPoint += 40;
+        }
+      }
+    }
+    for (var col = 0; col < moduleCount; col++) {
+      for (var row = 0; row < moduleCount - 6; row++) {
+        if (qrCode.isDark(row, col) && !qrCode.isDark(row + 1, col) && qrCode.isDark(row + 2, col) &&
+            qrCode.isDark(row + 3, col) && qrCode.isDark(row + 4, col) && !qrCode.isDark(row + 5, col) && qrCode.isDark(row + 6, col)) {
+          lostPoint += 40;
+        }
+      }
+    }
+    var darkCount = 0;
+    for (var col = 0; col < moduleCount; col++) {
+      for (var row = 0; row < moduleCount; row++) {
+        if (qrCode.isDark(row, col)) darkCount++;
+      }
+    }
+    var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+    lostPoint += ratio * 10;
+    return lostPoint;
+  }
+};
+
+var QRMath = {
+  glog : function(n) { if (n < 1) throw new Error("glog(" + n + ")"); return QRMath.LOG_TABLE[n]; },
+  gexp : function(n) { while (n < 0) n += 255; while (n >= 256) n -= 255; return QRMath.EXP_TABLE[n]; },
+  EXP_TABLE : new Array(256),
+  LOG_TABLE : new Array(256)
+};
+for (var i = 0; i < 8; i++) QRMath.EXP_TABLE[i] = 1 << i;
+for (var i = 8; i < 256; i++) {
+  QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i-4] ^ QRMath.EXP_TABLE[i-5] ^ QRMath.EXP_TABLE[i-6] ^ QRMath.EXP_TABLE[i-8];
+}
+for (var i = 0; i < 255; i++) QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
+
+function QRPolynomial(num, shift) {
+  if (num.length == undefined) throw new Error(num.length + "/" + shift);
+  var offset = 0;
+  while (offset < num.length && num[offset] == 0) offset++;
+  this.num = new Array(num.length - offset + shift);
+  for (var i = 0; i < num.length - offset; i++) this.num[i] = num[i + offset];
+}
+QRPolynomial.prototype = {
+  get : function(index) { return this.num[index]; },
+  getLength : function() { return this.num.length; },
+  multiply : function(e) {
+    var num = new Array(this.getLength() + e.getLength() - 1);
+    for (var i = 0; i < this.getLength(); i++) {
+      for (var j = 0; j < e.getLength(); j++) {
+        num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
+      }
+    }
+    return new QRPolynomial(num, 0);
+  },
+  mod : function(e) {
+    if (this.getLength() - e.getLength() < 0) return this;
+    var ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0));
+    var num = new Array(this.getLength());
+    for (var i = 0; i < this.getLength(); i++) num[i] = this.get(i);
+    for (var i = 0; i < e.getLength(); i++) num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
+    return new QRPolynomial(num, 0).mod(e);
+  }
+};
+
+function QRRSBlock(totalCount, dataCount) { this.totalCount = totalCount; this.dataCount = dataCount; }
+QRRSBlock.RS_BLOCK_TABLE = [
+  [1,26,19],[1,26,16],[1,26,13],[1,26,9],
+  [1,44,34],[1,44,28],[1,44,22],[1,44,16],
+  [1,70,55],[1,70,44],[2,35,17],[2,35,13],
+  [1,100,80],[2,50,32],[2,50,24],[4,25,9],
+  [1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],
+  [2,86,68],[4,43,27],[4,43,19],[4,43,15],
+  [2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],
+  [2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],
+  [2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],
+  [2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],
+  [4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],
+  [2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],
+  [4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],
+  [3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],
+  [5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],
+  [5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],
+  [1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],
+  [5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],
+  [3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],
+  [3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],
+  [4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],
+  [2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],
+  [4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],
+  [6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],
+  [8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],
+  [10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],
+  [8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],
+  [3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],
+  [7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],
+  [5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],
+  [13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],
+  [17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],
+  [17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],
+  [13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],
+  [12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],
+  [6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],
+  [17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],
+  [4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],
+  [20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],
+  [19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]
+];
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+  var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+  if (rsBlock == undefined) throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+  var length = rsBlock.length / 3;
+  var list = [];
+  for (var i = 0; i < length; i++) {
+    var count = rsBlock[i * 3 + 0];
+    var totalCount = rsBlock[i * 3 + 1];
+    var dataCount = rsBlock[i * 3 + 2];
+    for (var j = 0; j < count; j++) list.push(new QRRSBlock(totalCount, dataCount));
+  }
+  return list;
+};
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+  switch(errorCorrectLevel) {
+    case QRErrorCorrectLevel.L : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+    case QRErrorCorrectLevel.M : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+    case QRErrorCorrectLevel.Q : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+    case QRErrorCorrectLevel.H : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+    default : return undefined;
+  }
+};
+
+function QRBitBuffer() { this.buffer = []; this.length = 0; }
+QRBitBuffer.prototype = {
+  get : function(index) { var bufIndex = Math.floor(index / 8); return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) == 1; },
+  put : function(num, length) { for (var i = 0; i < length; i++) this.putBit(((num >>> (length - i - 1)) & 1) == 1); },
+  getLengthInBits : function() { return this.length; },
+  putBit : function(bit) {
+    var bufIndex = Math.floor(this.length / 8);
+    if (this.buffer.length <= bufIndex) this.buffer.push(0);
+    if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8));
+    this.length++;
+  }
+};
+
+function QR8bitByte(data) {
+  this.mode = QRMode.MODE_8BIT_BYTE;
+  this.data = data;
+  this.bytes = QR8bitByte.utf8Encode(data);
+}
+QR8bitByte.utf8Encode = function(s) {
+  var utf8 = unescape(encodeURIComponent(s));
+  var bytes = [];
+  for (var i = 0; i < utf8.length; i++) bytes.push(utf8.charCodeAt(i));
+  return bytes;
+};
+QR8bitByte.prototype = {
+  getLength : function() { return this.bytes.length; },
+  write : function(buffer) { for (var i = 0; i < this.bytes.length; i++) buffer.put(this.bytes[i], 8); }
+};
+
+function QRCodeModel(typeNumber, errorCorrectLevel) {
+  this.typeNumber = typeNumber;
+  this.errorCorrectLevel = errorCorrectLevel;
+  this.modules = null;
+  this.moduleCount = 0;
+  this.dataCache = null;
+  this.dataList = [];
+}
+QRCodeModel.PAD0 = 0xEC;
+QRCodeModel.PAD1 = 0x11;
+QRCodeModel.prototype = {
+  addData : function(data) { this.dataList.push(new QR8bitByte(data)); this.dataCache = null; },
+  isDark : function(row, col) {
+    if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) throw new Error(row + "," + col);
+    return this.modules[row][col];
+  },
+  getModuleCount : function() { return this.moduleCount; },
+  make : function() { this.makeImpl(false, this.getBestMaskPattern()); },
+  makeImpl : function(test, maskPattern) {
+    this.moduleCount = this.typeNumber * 4 + 17;
+    this.modules = new Array(this.moduleCount);
+    for (var row = 0; row < this.moduleCount; row++) {
+      this.modules[row] = new Array(this.moduleCount);
+      for (var col = 0; col < this.moduleCount; col++) this.modules[row][col] = null;
+    }
+    this.setupPositionProbePattern(0, 0);
+    this.setupPositionProbePattern(this.moduleCount - 7, 0);
+    this.setupPositionProbePattern(0, this.moduleCount - 7);
+    this.setupPositionAdjustPattern();
+    this.setupTimingPattern();
+    this.setupTypeInfo(test, maskPattern);
+    if (this.typeNumber >= 7) this.setupTypeNumber(test);
+    if (this.dataCache == null) this.dataCache = QRCodeModel.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+    this.mapData(this.dataCache, maskPattern);
+  },
+  setupPositionProbePattern : function(row, col) {
+    for (var r = -1; r <= 7; r++) {
+      if (row + r <= -1 || this.moduleCount <= row + r) continue;
+      for (var c = -1; c <= 7; c++) {
+        if (col + c <= -1 || this.moduleCount <= col + c) continue;
+        if ((0 <= r && r <= 6 && (c == 0 || c == 6)) || (0 <= c && c <= 6 && (r == 0 || r == 6)) || (2 <= r && r <= 4 && 2 <= c && c <= 4)) {
+          this.modules[row + r][col + c] = true;
+        } else {
+          this.modules[row + r][col + c] = false;
+        }
+      }
+    }
+  },
+  getBestMaskPattern : function() {
+    var minLostPoint = 0;
+    var pattern = 0;
+    for (var i = 0; i < 8; i++) {
+      this.makeImpl(true, i);
+      var lostPoint = QRUtil.getLostPoint(this);
+      if (i == 0 || minLostPoint > lostPoint) { minLostPoint = lostPoint; pattern = i; }
+    }
+    return pattern;
+  },
+  setupTimingPattern : function() {
+    for (var r = 8; r < this.moduleCount - 8; r++) { if (this.modules[r][6] != null) continue; this.modules[r][6] = (r % 2 == 0); }
+    for (var c = 8; c < this.moduleCount - 8; c++) { if (this.modules[6][c] != null) continue; this.modules[6][c] = (c % 2 == 0); }
+  },
+  setupPositionAdjustPattern : function() {
+    var pos = QRUtil.getPatternPosition(this.typeNumber);
+    for (var i = 0; i < pos.length; i++) {
+      for (var j = 0; j < pos.length; j++) {
+        var row = pos[i], col = pos[j];
+        if (this.modules[row][col] != null) continue;
+        for (var r = -2; r <= 2; r++) {
+          for (var c = -2; c <= 2; c++) {
+            if (r == -2 || r == 2 || c == -2 || c == 2 || (r == 0 && c == 0)) this.modules[row + r][col + c] = true;
+            else this.modules[row + r][col + c] = false;
+          }
+        }
+      }
+    }
+  },
+  setupTypeNumber : function(test) {
+    var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+    for (var i = 0; i < 18; i++) {
+      var mod = (!test && ((bits >> i) & 1) == 1);
+      this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+    }
+    for (var i = 0; i < 18; i++) {
+      var mod = (!test && ((bits >> i) & 1) == 1);
+      this.modules[i % 3 + this.moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+    }
+  },
+  setupTypeInfo : function(test, maskPattern) {
+    var data = (this.errorCorrectLevel << 3) | maskPattern;
+    var bits = QRUtil.getBCHTypeInfo(data);
+    for (var i = 0; i < 15; i++) {
+      var mod = (!test && ((bits >> i) & 1) == 1);
+      if (i < 6) this.modules[i][8] = mod;
+      else if (i < 8) this.modules[i + 1][8] = mod;
+      else this.modules[this.moduleCount - 15 + i][8] = mod;
+    }
+    for (var i = 0; i < 15; i++) {
+      var mod = (!test && ((bits >> i) & 1) == 1);
+      if (i < 8) this.modules[8][this.moduleCount - i - 1] = mod;
+      else if (i < 9) this.modules[8][15 - i - 1 + 1] = mod;
+      else this.modules[8][15 - i - 1] = mod;
+    }
+    this.modules[this.moduleCount - 8][8] = (!test);
+  },
+  mapData : function(data, maskPattern) {
+    var inc = -1;
+    var row = this.moduleCount - 1;
+    var bitIndex = 7;
+    var byteIndex = 0;
+    for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+      if (col == 6) col--;
+      while (true) {
+        for (var c = 0; c < 2; c++) {
+          if (this.modules[row][col - c] == null) {
+            var dark = false;
+            if (byteIndex < data.length) dark = (((data[byteIndex] >>> bitIndex) & 1) == 1);
+            var mask = QRUtil.getMask(maskPattern, row, col - c);
+            if (mask) dark = !dark;
+            this.modules[row][col - c] = dark;
+            bitIndex--;
+            if (bitIndex == -1) { byteIndex++; bitIndex = 7; }
+          }
+        }
+        row += inc;
+        if (row < 0 || this.moduleCount <= row) { row -= inc; inc = -inc; break; }
+      }
+    }
+  }
+};
+QRCodeModel.PAD0 = 0xEC;
+QRCodeModel.PAD1 = 0x11;
+QRCodeModel.createData = function(typeNumber, errorCorrectLevel, dataList) {
+  var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+  var buffer = new QRBitBuffer();
+  for (var i = 0; i < dataList.length; i++) {
+    var data = dataList[i];
+    buffer.put(data.mode, 4);
+    buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
+    data.write(buffer);
+  }
+  var totalDataCount = 0;
+  for (var i = 0; i < rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount;
+  if (buffer.getLengthInBits() > totalDataCount * 8) {
+    throw new Error("code length overflow. (" + buffer.getLengthInBits() + ">" + totalDataCount * 8 + ")");
+  }
+  if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) buffer.put(0, 4);
+  while (buffer.getLengthInBits() % 8 != 0) buffer.putBit(false);
+  while (true) {
+    if (buffer.getLengthInBits() >= totalDataCount * 8) break;
+    buffer.put(QRCodeModel.PAD0, 8);
+    if (buffer.getLengthInBits() >= totalDataCount * 8) break;
+    buffer.put(QRCodeModel.PAD1, 8);
+  }
+  return QRCodeModel.createBytes(buffer, rsBlocks);
+};
+QRCodeModel.createBytes = function(buffer, rsBlocks) {
+  var offset = 0;
+  var maxDcCount = 0, maxEcCount = 0;
+  var dcdata = new Array(rsBlocks.length);
+  var ecdata = new Array(rsBlocks.length);
+  for (var r = 0; r < rsBlocks.length; r++) {
+    var dcCount = rsBlocks[r].dataCount;
+    var ecCount = rsBlocks[r].totalCount - dcCount;
+    maxDcCount = Math.max(maxDcCount, dcCount);
+    maxEcCount = Math.max(maxEcCount, ecCount);
+    dcdata[r] = new Array(dcCount);
+    for (var i = 0; i < dcdata[r].length; i++) dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+    offset += dcCount;
+    var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+    var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+    var modPoly = rawPoly.mod(rsPoly);
+    ecdata[r] = new Array(rsPoly.getLength() - 1);
+    for (var i = 0; i < ecdata[r].length; i++) {
+      var modIndex = i + modPoly.getLength() - ecdata[r].length;
+      ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0;
+    }
+  }
+  var totalCodeCount = 0;
+  for (var i = 0; i < rsBlocks.length; i++) totalCodeCount += rsBlocks[i].totalCount;
+  var data = new Array(totalCodeCount);
+  var index = 0;
+  for (var i = 0; i < maxDcCount; i++) {
+    for (var r = 0; r < rsBlocks.length; r++) if (i < dcdata[r].length) data[index++] = dcdata[r][i];
+  }
+  for (var i = 0; i < maxEcCount; i++) {
+    for (var r = 0; r < rsBlocks.length; r++) if (i < ecdata[r].length) data[index++] = ecdata[r][i];
+  }
+  return data;
+};
+
+function qrcode(typeNumber, errorCorrectLevel) {
+  var level = QRErrorCorrectLevel[errorCorrectLevel || 'M'];
+  var type = typeNumber || 0;
+  var qr;
+  if (type === 0) {
+    for (var t = 1; t <= 40; t++) {
+      try {
+        qr = new QRCodeModel(t, level);
+        return qr;
+      } catch(e) { continue; }
+    }
+  }
+  return new QRCodeModel(type, level);
+}
+
+qrcode.stringToBytes = QR8bitByte.utf8Encode;
+qrcode.createStringToBytes = function(){};
+
+return {
+  create: function(text, opts) {
+    opts = opts || {};
+    var level = opts.errorCorrectLevel || 'M';
+    var lvl = QRErrorCorrectLevel[level];
+    var qr;
+    for (var t = 1; t <= 40; t++) {
+      try {
+        qr = new QRCodeModel(t, lvl);
+        qr.addData(text);
+        qr.make();
+        return qr;
+      } catch(e) { continue; }
+    }
+    throw new Error("Text too long for QR code");
+  }
+};
+}();
+
+</script>
+
+<script>
+(function() {
+  // Copy button logic
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = btn.getAttribute('data-target');
+      var block = document.querySelector('.code-block[data-prompt-id="' + id + '"]');
+      var text = block.innerText;
+      navigator.clipboard.writeText(text).then(function() {
+        var label = btn.querySelector('.copy-label');
+        var original = label.textContent;
+        label.textContent = 'הועתק!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          label.textContent = original;
+          btn.classList.remove('copied');
+        }, 1800);
+      }).catch(function() {
+        var range = document.createRange();
+        range.selectNodeContents(block);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('copy');
+        sel.removeAllRanges();
+      });
+    });
+  });
+
+  // QR code rendering — self-referential to current page URL
+  function drawQR(canvas, text, size) {
+    var qr = qrcode.create(text, { errorCorrectLevel: 'M' });
+    var count = qr.getModuleCount();
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    ctx.scale(dpr, dpr);
+    var cell = size / count;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#1A1A1A';
+    for (var row = 0; row < count; row++) {
+      for (var col = 0; col < count; col++) {
+        if (qr.isDark(row, col)) {
+          ctx.fillRect(Math.round(col * cell), Math.round(row * cell), Math.ceil(cell), Math.ceil(cell));
+        }
+      }
+    }
+  }
+
+  var pageUrl = window.location.href.split('#')[0];
+  var smallCanvas = document.getElementById('qrCanvasSmall');
+  var largeCanvas = document.getElementById('qrCanvasLarge');
+  drawQR(smallCanvas, pageUrl, 64);
+  drawQR(largeCanvas, pageUrl, 240);
+  document.getElementById('qrUrlText').textContent = pageUrl;
+
+  var backdrop = document.getElementById('qrModalBackdrop');
+  var fab = document.getElementById('qrFab');
+  function openModal() { backdrop.classList.add('open'); }
+  function closeModal() { backdrop.classList.remove('open'); }
+  fab.addEventListener('click', openModal);
+  fab.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); } });
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+})();
+</script>
+
+</body>
+</html>
