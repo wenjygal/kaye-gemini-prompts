@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>מאפיינים רעיון בעזרת ראיון עם Gemini — מכללת קיי</title>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="מאפיינים רעיון בעזרת ראיון עם Gemini">
+<meta property="og:description" content="המצגת ו-7 הפרומפטים לראיון האפיון עם Gemini — מכללת קיי, האקתון AI בהוראה">
+<meta property="og:image" content="https://wenjygal.github.io/kaye-gemini-prompts/og-image.png">
+<meta property="og:url" content="https://wenjygal.github.io/kaye-gemini-prompts/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="מאפיינים רעיון בעזרת ראיון עם Gemini">
+<meta name="twitter:description" content="המצגת ו-7 הפרומפטים לראיון האפיון עם Gemini — מכללת קיי">
+<meta name="twitter:image" content="https://wenjygal.github.io/kaye-gemini-prompts/og-image.png">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap');
 
@@ -92,6 +103,10 @@ h1 {
 }
 .gate-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 .gate-link:active { transform: scale(0.98); }
+.gate-link:focus-visible {
+  outline: 3px solid var(--color-magenta);
+  outline-offset: 2px;
+}
 
 .gate-link.primary {
   background: var(--gradient-brand);
@@ -154,6 +169,10 @@ footer {
   transition: transform 0.2s;
 }
 .qr-fab:hover { transform: scale(1.04); }
+.qr-fab:focus-visible {
+  outline: 3px solid var(--color-magenta);
+  outline-offset: 2px;
+}
 .qr-fab canvas { display: block; width: 84px; height: 84px; border-radius: 6px; }
 .qr-fab .qr-fab-label {
   font-size: 0.62rem;
@@ -211,7 +230,7 @@ footer {
   <div class="gateway">
     <a class="gate-link primary" href="slides/">
       <span class="gate-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
       </span>
       <span class="gate-text">
         <div class="gate-title">המצגת</div>
@@ -222,7 +241,7 @@ footer {
 
     <a class="gate-link" href="prompts/">
       <span class="gate-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#E0128B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#E0128B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       </span>
       <span class="gate-text">
         <div class="gate-title">7 הפרומפטים</div>

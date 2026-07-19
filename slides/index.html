@@ -52,6 +52,10 @@ html, body {
   transition: background 0.2s;
 }
 .back-link:hover { background: rgba(255,255,255,0.18); }
+.back-link:focus-visible, .open-link:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 2px;
+}
 
 .title {
   color: rgba(255,255,255,0.7);
